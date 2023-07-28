@@ -3,51 +3,96 @@ import Cards from '../Cards/Cards';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-
+import axios from 'axios';
+import { Toaster,toast } from 'react-hot-toast';
+import { useUserContext } from '../Context/UserContext';
 const Dashboard = () => {
-  const [events, setEvents] = useState([]);
+  // const [events, setEvents] = useState([]);
+  const {user,events,setEvents} = useUserContext()
+  const [data,setdata] = useState({
+   user:""
+  })
+  useEffect(()=>{
+    setdata({
+      user:user
+    })
+  })
+
   const [filterCriteria, setFilterCriteria] = useState({
     category: '',
     date: '',
     location: '',
   });
+  // console.log(events)
   const [participatedEvents, setParticipatedEvents] = useState([]);
-
-  // Function to fetch virtual events data from the API
-  const fetchVirtualEvents = async () => {
+  const handleAttend = async (eventId) => {
     try {
-      // Make API call to fetch all virtual events
-      const response = await fetch('http://localhost:5000/api/v1/getAllVirtualEvents');
-      const data = await response.json();
-      setEvents(data.data); // Assuming the virtual events are available in the 'payload' field of the response
+
+      if (!user.token) {
+        // Show toast notification for unauthenticated user
+        toast.error('Please Login to Attend');
+        return;
+      }
+      const eventId = events?.organizer?;
+  
+      // Make API call to participate in the event using Axios
+      const response = await axios.post(`http://localhost:5000/api/v1/participateInEvent/${eventId}`, {data});
+  
+      if (!response.ok) {
+        throw new Error(response.data.message || 'Failed to participate in the event');
+      }
+  
+      // Update the events list to mark the event as participated
+      setEvents((prevEvents) =>
+        prevEvents.map((event) => (event.id === eventId ? { ...event, isParticipated: true } : event))
+      );
+  
+      // Show toast notification for successful attendance
+      toast.success('Successfully attended the event!');
     } catch (error) {
-      console.error('Error fetching virtual events:', error);
+      console.error('Error participating in the event:', error.message);
+      // Handle error, e.g., show a toast or an error message to the user
+      toast.error('Error participating in the event');
     }
   };
+  
+  
+  const handleRSVP = async (eventId) => {
+    try {
+      // Make API call to RSVP for the event
+      const response = await fetch(`http://localhost:5000/api/v1/rsvpForEvent/${eventId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Include any required authorization headers if your backend requires authentication
+        },
+      });
+  
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to RSVP for the event');
+      }
+  
+      // Update the participatedEvents list to mark the event as RSVPed
+      setParticipatedEvents((prevEvents) =>
+        prevEvents.map((event) => (event.id === eventId ? { ...event, isRSVPed: true } : event))
+      );
+    } catch (error) {
+      console.error('Error RSVPing for the event:', error.message);
+      // Handle error, e.g., show a toast or an error message to the user
+    }
+  };
+  
+  // Function to fetch virtual events data from the API
+  
 
   // Fetch virtual events data when the component mounts
   useEffect(() => {
     fetchVirtualEvents();
   }, []);
 
-  const handleAttend = (eventId) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === eventId ? { ...event, isParticipated: true } : event
-      )
-    );
-    setParticipatedEvents((prevEvents) =>
-      events.filter((event) => event.id === eventId)
-    );
-  };
+  
 
-  const handleRSVP = (eventId) => {
-    setParticipatedEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === eventId ? { ...event, isRSVPed: true } : event
-      )
-    );
-  };
 
   const handleFilterChange = (name, value) => {
     setFilterCriteria((prevCriteria) => ({
@@ -119,6 +164,10 @@ const Dashboard = () => {
           </Grid>
         ))}
       </Grid>
+      <Toaster
+            position="top-center"
+            reverseOrder={false}
+          />
     </div>
   );
 };

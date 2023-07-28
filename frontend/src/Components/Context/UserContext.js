@@ -6,6 +6,7 @@ export function useUserContext() {
   return useContext(UserContext);
 }
 
+
 export function UserProvider({ children }) {
   const [user, setUser] = useState(() => {
     // Get the user data from local storage if it exists
