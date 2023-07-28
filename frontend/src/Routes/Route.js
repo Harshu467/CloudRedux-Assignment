@@ -14,11 +14,6 @@ const components = {
     name: "home",
     element: <Home />,
   },
-  Events: {
-    path: "/events",
-    name: "events",
-    element: <Events />,
-  },
   AddEvents:{
     path:"/addevents",
     name:"addevents",
@@ -53,17 +48,13 @@ const components = {
 
 const rolesConfig = {
   user: {
-    routes: [components.Events, components.Profile],
-  },
-  guest: {
-    routes: [components.Register, components.Login],
+    routes: [components.AddEvents, components.Profile],
   },
 };
 
 const BasicRoutesConfig = [
   components.Register,
   components.Login,
-  components.Events,
   components.Profile,
   components.NotFound,
   components.Home,

@@ -32,12 +32,21 @@ const Cards = ({ event, onAttend, onRSVP }) => {
           Virtual Location: {event.virtualLocation}
         </Typography>
         <div className="mt-4 space-x-2">
-          <Button variant="contained" color="primary" onClick={handleAttendClick} className="px-4 py-2">
-            Attend
-          </Button>
-          <Button variant="contained" color="secondary" onClick={handleRSVPClick} className="px-4 py-2">
-            RSVP
-          </Button>
+          {event.isParticipated ? (
+            event.isRSVPed ? (
+              <Typography variant="body2" className="text-green-500 font-bold">
+                You have RSVPed to this event.
+              </Typography>
+            ) : (
+              <Button variant="contained" color="secondary" onClick={handleRSVPClick} className="px-4 py-2">
+                RSVP
+              </Button>
+            )
+          ) : (
+            <Button variant="contained" color="primary" onClick={handleAttendClick} className="px-4 py-2">
+              Attend
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

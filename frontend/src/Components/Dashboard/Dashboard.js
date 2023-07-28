@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cards from '../Cards/Cards';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
 const Dashboard = () => {
   const [events, setEvents] = useState([]);
@@ -10,6 +11,7 @@ const Dashboard = () => {
     date: '',
     location: '',
   });
+  const [participatedEvents, setParticipatedEvents] = useState([]);
 
   // Function to fetch virtual events data from the API
   const fetchVirtualEvents = async () => {
@@ -17,7 +19,6 @@ const Dashboard = () => {
       // Make API call to fetch all virtual events
       const response = await fetch('http://localhost:5000/api/v1/getAllVirtualEvents');
       const data = await response.json();
-      console.log(data.data)
       setEvents(data.data); // Assuming the virtual events are available in the 'payload' field of the response
     } catch (error) {
       console.error('Error fetching virtual events:', error);
@@ -30,13 +31,22 @@ const Dashboard = () => {
   }, []);
 
   const handleAttend = (eventId) => {
-    // Perform the action for  label="Date"attending the event
-    console.log(`Attending event with ID: ${eventId}`);
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === eventId ? { ...event, isParticipated: true } : event
+      )
+    );
+    setParticipatedEvents((prevEvents) =>
+      events.filter((event) => event.id === eventId)
+    );
   };
 
   const handleRSVP = (eventId) => {
-    // Perform the action for RSVPing to the event
-    console.log(`RSVPing for event with ID: ${eventId}`);
+    setParticipatedEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === eventId ? { ...event, isRSVPed: true } : event
+      )
+    );
   };
 
   const handleFilterChange = (name, value) => {
@@ -98,16 +108,17 @@ const Dashboard = () => {
           Reset Filters
         </Button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <Grid container spacing={2}>
         {filteredEvents.map((event) => (
-          <Cards
-            key={event.id}
-            event={event}
-            onAttend={() => handleAttend(event.id)}
-            onRSVP={() => handleRSVP(event.id)}
-          />
+          <Grid item xs={12} sm={6} md={4} lg={3} key={event.id}>
+            <Cards
+              event={event}
+              onAttend={() => handleAttend(event.id)}
+              onRSVP={() => handleRSVP(event.id)}
+            />
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </div>
   );
 };

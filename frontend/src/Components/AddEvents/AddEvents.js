@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { useUserContext } from '../Context/UserContext';
+import { Button } from '@mui/material';
+import { Toaster,toast } from 'react-hot-toast';
 import axios from 'axios';
-import {Toaster,toast} from 'react-hot-toast';
-
-const AddEvents = () => {
+import { useUserContext } from '../Context/UserContext';
+const CreateEvent= () => {
   const { addEvent, user } = useUserContext();
   const [formData, setFormData] = useState({
     title: '',
@@ -100,69 +98,80 @@ const AddEvents = () => {
     }
   };
 
+
   return (
-    <form className="max-w-md mt-[5rem] mx-auto mt-10 p-4 bg-white rounded-lg shadow-md" onSubmit={handleSubmit}>
-      <div className="mb-4">
-        <TextField
-          label="Title"
-          variant="outlined"
-          fullWidth
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="mb-4">
-        <TextField
-          label="Description"
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={4}
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="mb-4">
-        <TextField
-          variant="outlined"
-          type="date"
-          fullWidth
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="mb-4">
-        <TextField
-          variant="outlined"
-          type="time"
-          fullWidth
-          name="time"
-          value={formData.time}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="mb-4">
-        <TextField
-          label="Virtual Location"
-          variant="outlined"
-          fullWidth
-          name="virtualLocation"
-          value={formData.virtualLocation}
-          onChange={handleChange}
-        />
-      </div>
-      <Button type="submit" variant="contained" color="primary" fullWidth>
+    <div className="container mx-auto px-4">
+      <h2 className="text-2xl font-bold mt-8 mb-4">Create New Event</h2>
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+        <div className="mb-4">
+          <label htmlFor="title" className="block text-gray-700 font-bold mb-2">Event Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="description" className="block text-gray-700 font-bold mb-2">Event Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="date" className="block text-gray-700 font-bold mb-2">Date</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="time" className="block text-gray-700 font-bold mb-2">Time</label>
+          <input
+            type="time"
+            id="time"
+            name="time"
+            value={formData.time}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="virtualLocation" className="block text-gray-700 font-bold mb-2">Virtual Location (URL or Platform Link)</label>
+          <input
+            type="text"
+            id="virtualLocation"
+            name="virtualLocation"
+            value={formData.virtualLocation}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+            required
+          />
+        </div>
+        <Button type="submit" variant="contained" color="primary" fullWidth>
         Add Event
       </Button>
       <Toaster
             position="top-center"
             reverseOrder={false}
           />
-    </form>
+      </form>
+    </div>
   );
 };
 
-export default AddEvents;
+export default CreateEvent;

@@ -3,7 +3,7 @@ import axios from 'axios';
 const Events = () => {
   useEffect(() => {
     // Fetch all virtual events from the backend
-    axios.get('http://localhost:5000/api/v1/events')
+    axios.get('http://localhost:5000/api/v1/getAllVirtualEvents')
       .then((response) => {
         setEvents(response.data.data);
       })
