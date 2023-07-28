@@ -80,7 +80,7 @@ const AddEvents = () => {
 
     try {
       // Create an event object with the form data
-      const newEvent = { ...formData, id: Date.now(), organizer: user._id };
+      const newEvent = { ...formData, id: Date.now(), organizer: user.id };
       // Send the event data to the backend
       const response = await axios.post(`http://localhost:5000/api/v1/createVirtualEvent/${user.id}`, newEvent);
       // Call the addEvent function from the context to add the event to the user's events
@@ -91,7 +91,7 @@ const AddEvents = () => {
         description: '',
         date: '',
         time: '',
-        virtual_location: '',
+        virtualLocation: '',
       });
       // Show success message using toaster
       toast.success('Event created successfully!');
@@ -126,7 +126,6 @@ const AddEvents = () => {
       </div>
       <div className="mb-4">
         <TextField
-          label="Date"
           variant="outlined"
           type="date"
           fullWidth
@@ -137,7 +136,6 @@ const AddEvents = () => {
       </div>
       <div className="mb-4">
         <TextField
-          label="Time"
           variant="outlined"
           type="time"
           fullWidth

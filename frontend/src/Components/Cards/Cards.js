@@ -14,13 +14,13 @@ const Cards = ({ event, onAttend, onRSVP }) => {
   };
 
   return (
-    <Card className="max-w-xs mx-auto mb-4">
+    <Card className="max-w-xs mx-auto mb-4 shadow-md rounded-lg">
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h5" component="div" className="text-xl font-bold">
           {event.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {event.description}
+          Description: {event.description}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Date: {event.date}
@@ -29,13 +29,13 @@ const Cards = ({ event, onAttend, onRSVP }) => {
           Time: {event.time}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Virtual Location: {event.virtual_location}
+          Virtual Location: {event.virtualLocation}
         </Typography>
         <div className="mt-4 space-x-2">
-          <Button variant="contained" color="primary" onClick={handleAttendClick}>
+          <Button variant="contained" color="primary" onClick={handleAttendClick} className="px-4 py-2">
             Attend
           </Button>
-          <Button variant="contained" color="secondary" onClick={handleRSVPClick}>
+          <Button variant="contained" color="secondary" onClick={handleRSVPClick} className="px-4 py-2">
             RSVP
           </Button>
         </div>

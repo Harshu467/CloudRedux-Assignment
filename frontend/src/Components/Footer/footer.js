@@ -16,10 +16,7 @@ const Footer = () => {
                       <a href="/" aria-label="Go to home page">Home</a>
                     </li>
                     <li>
-                      <a href="/about" aria-label="Go to about page">About</a>
-                    </li>
-                    <li>
-                      <a href="/recommend" aria-label="Go to recommendation page">For You</a>
+                      <a href="/dashboard" aria-label="Go to recommendation page">Dashboard</a>
                     </li>
                     <li>
                       <a href="/profile" aria-label="Go to your profile page">Profile</a>

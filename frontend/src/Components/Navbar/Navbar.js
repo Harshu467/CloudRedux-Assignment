@@ -1,11 +1,12 @@
-import "./navbar.css"
-import { Link } from "react-router-dom"
-import { useEffect, useRef, useState } from "react"
-import { useUserContext } from "../Context/UserContext"
-// import Profile from "../profile/Profile"
+import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useUserContext } from "../Context/UserContext";
+// import Profile from "../profile/Profile"; // Import the Profile component
+import Checkbox from '@mui/material/Checkbox';
+import { styled } from '@mui/material/styles';
 
 const Navbar = () => {
-  const [navbar, setNavbar] = useState(false)
+  const [navbar, setNavbar] = useState(false);
   const { user, logoutUser } = useUserContext(); // Get the user object and logoutUser function from the UserContext
 
   const handleLogout = () => {
@@ -13,124 +14,70 @@ const Navbar = () => {
     logoutUser();
   };
 
-
-  const [labelText, setLabelText] = useState("&#9776")
+  const [labelText, setLabelText] = useState("☰");
   const hidebodyOverflow = (e) => {
-    document.body.classList.toggle("hideOverflow")
-    if (!checkboxRef.current.checked) setLabelText("&#9776")
-    else setLabelText("&times")
-  }
-  const checkboxRef = useRef()
+    document.body.classList.toggle("hideOverflow");
+    if (!checkboxRef.current.checked) setLabelText("☰");
+    else setLabelText("✕");
+  };
+  const checkboxRef = useRef();
   const removeOverflow = () => {
-    checkboxRef.current.checked = false
-    document.body.classList.remove("hideOverflow")
-    setLabelText("&#9776")
-  }
+    checkboxRef.current.checked = false;
+    document.body.classList.remove("hideOverflow");
+    setLabelText("☰");
+  };
 
   return (
-    <nav className={navbar ? "navbar" : "navbar_scroll"}>
-      <div className="community_logo">
-        <a href="#">
-          
-        </a>
-        {/* Menu for Desktop */}
-        <div className="menu">
-          <div className="left-menu">
-            <a href="/">
-              <li onClick={removeOverflow}>Home</li>
-            </a>
-            <Link to="/dashboard">
-              <li onClick={removeOverflow}>Dashboard</li>
-            </Link>
-            <a href="/team">
-              <li onClick={removeOverflow}>Team</li>
-            </a>
-            <a href="/addevents">
-              <li onClick={removeOverflow}>Add Events</li>
-            </a>
-
-            <div className="dropdown">
-              <a href="#">
-                <li>
-                  More <i class="fa fa-caret-down"></i>
-                </li>
-              </a>
-              <div className="dropdown-content">
-                <a href="#">
-                  <li>Blogs</li>
-                </a>
-                <a href="#faq">
-                  <li>FAQ</li>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+    <nav className={`flex items-center justify-between flex-wrap bg-blue-500 p-6 ${navbar ? "navbar" : "navbar_scroll"}`}>
+      <div className="flex items-center flex-shrink-0 text-white mr-6">
+        <a href="/" className="font-semibold text-xl tracking-tight">Home</a>
       </div>
 
-      <ul className="nav-links">
-        <input
-          type="checkbox"
+      <div className="block lg:hidden">
+        <Checkbox
+          color="default"
           id="checkbox_toggle"
           onClick={hidebodyOverflow}
           ref={checkboxRef}
+          sx={{ display: "none" }}
         />
         <label
           htmlFor="checkbox_toggle"
           style={{
-            fontSize: labelText === "&times" ? "35px" : "24px",
+            fontSize: labelText === "✕" ? "35px" : "24px",
+            cursor: "pointer",
           }}
           className="hamburger"
           dangerouslySetInnerHTML={{ __html: labelText }}
         ></label>
+      </div>
 
-        {/* Menu for Mobile Screen */}
-        <div className="menu">
-          {document.body.classList.contains("hideOverflow") && (
-            <div className="left-menu">
-              <a href="#about">
-                <li onClick={removeOverflow}>About Us</li>
-              </a>
-              <Link to="/resources">
-                <li onClick={removeOverflow}>Resources</li>
-              </Link>
-              <a href="#team">
-                <li onClick={removeOverflow}>Team</li>
-              </a>
-              <a href="/addevents">
-                <li onClick={removeOverflow}>Add Events</li>
-              </a>
-
-              <div className="dropdown">
-                <a href="#">
-                  <li>
-                    More <i class="fa fa-caret-down"></i>
-                  </li>
-                </a>
-                <div className="dropdown-content">
-                  <a href="#">
-                    <li>Blogs</li>
-                  </a>
-                  <a href="#faq">
-                    <li>FAQ</li>
-                  </a>
-                  <a href="#">
-                    <li>Achievements</li>
-                  </a>
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="right-menu">
-            <a href="/login" >
-              <li >Login</li>
-            </a>
-          </div>
-          
+      <div className={`w-full block flex-grow lg:flex lg:items-center lg:w-auto ${navbar ? "hidden" : "navbar_scroll"}`}>
+        <div className="text-sm lg:flex-grow">
+          <Link to="/dashboard" className="block mt-4 lg:inline-block lg:mt-0 text-white mr-4">
+            Dashboard
+          </Link>
+          <Link to="/addevents" className="block mt-4 lg:inline-block lg:mt-0 text-white mr-4">
+            Add Events
+          </Link>
         </div>
-      </ul>
+        <div className="text-sm">
+          {user ? ( // Check if the user is logged in
+            <>
+              <Link to="/profile" className="block mt-4 lg:inline-block lg:mt-0 text-white mr-4">
+                Profile
+              </Link>
+              <button onClick={handleLogout} className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-blue-500 hover:bg-white mt-4 lg:mt-0">Logout</button>
+            </>
+          ) : (
+            <Link to="/login" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-blue-500 hover:bg-white mt-4 lg:mt-0">
+              Login
+            </Link>
+          )}
+        </div>
+      </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

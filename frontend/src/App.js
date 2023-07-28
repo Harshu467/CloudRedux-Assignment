@@ -6,15 +6,19 @@ import { UserProvider } from './Components/Context/UserContext';
 
 function App() {
   // Check if the user is authenticated and get the user role from the session storage
+  const user = localStorage.getItem('user');  
   let isAuthenticated = false;
   let userRole = "";
+  if(user?.token === true) {
+    isAuthenticated=true;
+    userRole="user"
+  }
   
 
   // Get the appropriate routes based on the user role
   let routes = rolesConfig[userRole];
 
   return (
-    <UserProvider>
     <Suspense fallback={<div>Loading...</div>}>
       <Layout>
       <Routes>
@@ -34,7 +38,7 @@ function App() {
       </Routes>
       </Layout>
     </Suspense>
-    </UserProvider>
+    
   );
 }
 

@@ -1,28 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Cards from '../Cards/Cards';
-import events from '../Data/data';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 const Dashboard = () => {
-  const handleAttend = (eventId) => {
-    // Find the event with the matching ID in the events array
-    const attendedEvent = events.find((event) => event.id === eventId);
-    // Perform the action for attending the event
-    console.log(`Attending event: ${attendedEvent.title}`);
-  };
-
-  const handleRSVP = (eventId) => {
-    // Find the event with the matching ID in the events array
-    const rsvpedEvent = events.find((event) => event.id === eventId);
-    // Perform the action for RSVPing to the event
-    console.log(`RSVPing for event: ${rsvpedEvent.title}`);
-  };
+  const [events, setEvents] = useState([]);
   const [filterCriteria, setFilterCriteria] = useState({
     category: '',
     date: '',
     location: '',
   });
+
+  // Function to fetch virtual events data from the API
+  const fetchVirtualEvents = async () => {
+    try {
+      // Make API call to fetch all virtual events
+      const response = await fetch('http://localhost:5000/api/v1/getAllVirtualEvents');
+      const data = await response.json();
+      console.log(data.data)
+      setEvents(data.data); // Assuming the virtual events are available in the 'payload' field of the response
+    } catch (error) {
+      console.error('Error fetching virtual events:', error);
+    }
+  };
+
+  // Fetch virtual events data when the component mounts
+  useEffect(() => {
+    fetchVirtualEvents();
+  }, []);
+
+  const handleAttend = (eventId) => {
+    // Perform the action for  label="Date"attending the event
+    console.log(`Attending event with ID: ${eventId}`);
+  };
+
+  const handleRSVP = (eventId) => {
+    // Perform the action for RSVPing to the event
+    console.log(`RSVPing for event with ID: ${eventId}`);
+  };
 
   const handleFilterChange = (name, value) => {
     setFilterCriteria((prevCriteria) => ({
@@ -39,13 +54,17 @@ const Dashboard = () => {
     });
   };
 
-  const filteredEvents = events.filter((event) => {
+  const filteredEvents = events?.filter((event) => {
+    const category = event.title?.toLowerCase() || '';
+    const date = event.date || '';
+    const location = event.virtual_location?.toLowerCase() || '';
+
     return (
-      event.title.toLowerCase().includes(filterCriteria.category.toLowerCase()) &&
-      event.date.includes(filterCriteria.date) &&
-      event.virtual_location.toLowerCase().includes(filterCriteria.location.toLowerCase())
+      category.includes(filterCriteria.category.toLowerCase()) &&
+      date.includes(filterCriteria.date) &&
+      location.includes(filterCriteria.location.toLowerCase())
     );
-  });
+  }) ?? [];
 
   return (
     <div className="p-4">
@@ -60,7 +79,6 @@ const Dashboard = () => {
           className="w-60"
         />
         <TextField
-          label="Date"
           variant="outlined"
           size="small"
           type="date"

@@ -1,5 +1,5 @@
 import './home.css'
-
+import style from './style'
 import { useEffect, useRef, useState } from 'react'
 import AOS from "aos"
 import "aos/dist/aos.css"
@@ -16,18 +16,7 @@ const Home = () => {
 
 
 
-
-
-  const progressBarHandler = () => {
-    const totalScroll = document.documentElement.scrollTop
-    const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
-    const scroll = `${totalScroll / windowHeight}`
-    const progressBar = document.getElementById('progressBar')
-    progressBar.style.transform = `scale(${scroll},1)`
-    progressBar.style.opacity = `${scroll}`
-  }
-  window.addEventListener('scroll', progressBarHandler)
-
+  
 
   const backtopRef = useRef()
   window.addEventListener('scroll', () => {
@@ -103,35 +92,8 @@ const Home = () => {
 
 
 
-
-      
-            {/* <Team />
-            <FAQ /> */}
-
           </article>
         </main>
-
-
-        <style>
-          {`
-            .swiper-slide {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              flex-direction: column;
-              backdrop-filter: blur(2.5px);
-            }
-            .swiper-slide-shadow-left {
-              display: none;
-            }
-            .swiper-slide-shadow-right {
-              display: none;
-            }
-            .swiper-pagination-bullets {
-              display: none;
-            }
-          `}
-        </style>
       </>
   )
 }
