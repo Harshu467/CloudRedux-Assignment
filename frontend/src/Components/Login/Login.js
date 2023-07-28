@@ -79,7 +79,7 @@ export default function SignIn() {
         setUser(result.data.data)
         console.log(result.data.data)
         localStorage.setItem('user', JSON.stringify(result.data.data));
-        window.location.reload(false);
+        // window.location.reload(false);
         navigate('/')
         toast.success(result.data.message, { duration: 5000 })
         console.log(result)

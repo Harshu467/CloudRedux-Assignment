@@ -6,11 +6,12 @@ import Button from '@mui/material/Button';
 
 const Cards = ({ event, onAttend, onRSVP }) => {
   const handleAttendClick = () => {
-    onAttend(event.id);
+    console.log(event)
+    onAttend(event);
   };
 
   const handleRSVPClick = () => {
-    onRSVP(event.id);
+    onRSVP(event._id);
   };
 
   return (

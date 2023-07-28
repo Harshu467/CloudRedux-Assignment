@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import axios from 'axios';
 import { Toaster,toast } from 'react-hot-toast';
 import { useUserContext } from '../Context/UserContext';
+
 const Dashboard = () => {
   // const [events, setEvents] = useState([]);
   const {user,events,setEvents} = useUserContext()
@@ -16,7 +17,19 @@ const Dashboard = () => {
     setdata({
       user:user
     })
+    fetchVirtualEvents();
   })
+  const fetchVirtualEvents = async () => {
+    try {
+      // Make API call to fetch all virtual events
+      const response = await fetch('http://localhost:5000/api/v1/getAllVirtualEvents');
+      const data = await response.json();
+      console.log(data.data)
+      setEvents(data.data); // Assuming the virtual events are available in the 'payload' field of the response
+    } catch (error) {
+      console.error('Error fetching virtual events:', error);
+    }
+  }
 
   const [filterCriteria, setFilterCriteria] = useState({
     category: '',
@@ -25,7 +38,7 @@ const Dashboard = () => {
   });
   // console.log(events)
   const [participatedEvents, setParticipatedEvents] = useState([]);
-  const handleAttend = async (eventId) => {
+  const handleAttend = async (events) => {
     try {
 
       if (!user.token) {
@@ -33,10 +46,10 @@ const Dashboard = () => {
         toast.error('Please Login to Attend');
         return;
       }
-      const eventId = events?.organizer?;
+      const eventid = events?.organizer;
   
       // Make API call to participate in the event using Axios
-      const response = await axios.post(`http://localhost:5000/api/v1/participateInEvent/${eventId}`, {data});
+      const response = await axios.post(`http://localhost:5000/api/v1/participateInEvent/${eventid}`, {data});
   
       if (!response.ok) {
         throw new Error(response.data.message || 'Failed to participate in the event');
@@ -44,7 +57,7 @@ const Dashboard = () => {
   
       // Update the events list to mark the event as participated
       setEvents((prevEvents) =>
-        prevEvents.map((event) => (event.id === eventId ? { ...event, isParticipated: true } : event))
+        prevEvents.map((event) => (event.id === eventid ? { ...event, isParticipated: true } : event))
       );
   
       // Show toast notification for successful attendance
@@ -88,7 +101,7 @@ const Dashboard = () => {
 
   // Fetch virtual events data when the component mounts
   useEffect(() => {
-    fetchVirtualEvents();
+    // fetchVirtualEvents();
   }, []);
 
   
@@ -158,8 +171,8 @@ const Dashboard = () => {
           <Grid item xs={12} sm={6} md={4} lg={3} key={event.id}>
             <Cards
               event={event}
-              onAttend={() => handleAttend(event.id)}
-              onRSVP={() => handleRSVP(event.id)}
+              onAttend={ handleAttend}
+              onRSVP={handleRSVP}
             />
           </Grid>
         ))}
